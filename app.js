@@ -11,6 +11,7 @@ const nodemailer = require('nodemailer');
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const mysql = require('mysql2/promise'); // Usando mysql2
+const MySQLStore = require('express-mysql-session')(session);
 const app = express();
 
 
@@ -29,6 +30,23 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
+// Configuração do banco de dados MySQL
+const options = {
+  host: process.env.DB_HOST || 'metro.proxy.rlwy.net',
+  port: process.env.DB_PORT || 22537,
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || 'rgqWvFdLQYylJOeBffxARDNTEZvrlIPu',
+  database: process.env.DB_NAME || 'railway',
+  createDatabaseTable: true, // Cria a tabela automaticamente se não existir
+  schema: {
+    tableName: 'sessions', // Nome da tabela
+    columnNames: {
+      session_id: 'session_id',
+      expires: 'expires',
+      data: 'data'
+    }
+  }
+};
 
 app.use(express.json());
 app.use(bodyParser.json({ limit: '50mb' }));
@@ -39,14 +57,12 @@ app.use('/img', express.static(path.join(__dirname, 'img')));
 
 // Configuração da sessão
 app.use(session({
-  secret: 'seuSegredoAqui',
+  secret: process.env.SESSION_SECRET || 'seuSegredoAqui',
   resave: false,
   saveUninitialized: false,
-  store: new MemoryStore({
-    checkPeriod: 86400000 // prune expired entries every 24h
-  }),
+  store: sessionStore,
   cookie: {
-    secure: false,
+    secure: process.env.NODE_ENV === 'production', // HTTPS em produção
     maxAge: 24 * 60 * 60 * 1000 // 24 horas
   }
 }));
