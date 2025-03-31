@@ -11,7 +11,6 @@ const nodemailer = require('nodemailer');
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const mysql = require('mysql2/promise'); // Usando mysql2
-const MySQLStore = require('express-mysql-session')(session);
 const app = express();
 
 
