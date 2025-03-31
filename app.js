@@ -29,24 +29,6 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-// Configuração do banco de dados MySQL
-const options = {
-  host: process.env.DB_HOST || 'metro.proxy.rlwy.net',
-  port: process.env.DB_PORT || 22537,
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || 'rgqWvFdLQYylJOeBffxARDNTEZvrlIPu',
-  database: process.env.DB_NAME || 'railway',
-  createDatabaseTable: true, // Cria a tabela automaticamente se não existir
-  schema: {
-    tableName: 'sessions', // Nome da tabela
-    columnNames: {
-      session_id: 'session_id',
-      expires: 'expires',
-      data: 'data'
-    }
-  }
-};
-
 app.use(express.json());
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
