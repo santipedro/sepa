@@ -41,7 +41,6 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'seuSegredoAqui',
   resave: false,
   saveUninitialized: false,
-  store: sessionStore,
   cookie: {
     secure: process.env.NODE_ENV === 'production', // HTTPS em produção
     maxAge: 24 * 60 * 60 * 1000 // 24 horas
